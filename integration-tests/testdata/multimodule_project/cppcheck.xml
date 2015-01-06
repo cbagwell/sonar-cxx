@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results>
+<error file="cli/main.cc" line="5" id="unusedVariable" severity="style" msg="Unused variable: x"/>
+<error file="lib/component1.cc" line="6" id="unassignedVariable" severity="style" msg="Variable 'x' is not assigned a value."/>
+<error file="lib/component1.cc" line="7" id="uninitvar" severity="error" msg="Uninitialized variable: x"/>
+</results>
