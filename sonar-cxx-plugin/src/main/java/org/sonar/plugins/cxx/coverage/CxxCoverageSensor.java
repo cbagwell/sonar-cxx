@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.bootstrap.ProjectReactor;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
@@ -64,8 +65,8 @@ public class CxxCoverageSensor extends CxxReportSensor {
   /**
    * {@inheritDoc}
    */
-  public CxxCoverageSensor(Settings settings, ModuleFileSystem fs) {
-    super(settings, fs);
+  public CxxCoverageSensor(Settings settings, ModuleFileSystem fs, ProjectReactor reactor) {
+    super(settings, fs, reactor);
 
     parsers.add(new CoberturaParser());
     parsers.add(new BullseyeParser());
@@ -77,7 +78,7 @@ public class CxxCoverageSensor extends CxxReportSensor {
    */
   @Override
   public void analyse(Project project, SensorContext context) {
-    String baseDir = fs.baseDir().getPath();
+    String baseDir = reactor.getRoot().getBaseDir().getAbsolutePath();
 
     CxxUtils.LOG.debug("Parsing coverage reports");
     List<File> reports = getReports(conf, baseDir, REPORT_PATH_KEY, DEFAULT_REPORT_PATH);

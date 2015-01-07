@@ -3,5 +3,6 @@
 int main(int argc, char* argv[])
 {
     int x; // unused variable
-    return Bar().foo();
+    Bar().foo();
+    return 0;
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results>
+<error file="module1.cc" line="4" id="unassignedVariable" severity="style" msg="Variable 'x' is not assigned a value."/>
+<error file="module1.cc" line="5" id="uninitvar" severity="error" msg="Uninitialized variable: x"/>
+</results>

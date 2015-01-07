@@ -31,7 +31,7 @@ Feature: Importing Cppcheck reports
               """
          AND the number of violations fed is 0
 
-   @wip
+
    Scenario: The report mentions an unknown rule
      GIVEN the project "cppcheck_project"
      WHEN I run "sonar-runner -X -Dsonar.cxx.cppcheck.reportPath=rule_unknown.xml"

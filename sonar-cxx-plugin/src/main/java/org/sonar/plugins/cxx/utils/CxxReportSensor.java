@@ -29,6 +29,7 @@ import java.util.Collections;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.batch.bootstrap.ProjectReactor;
 import org.sonar.api.config.Settings;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
@@ -57,6 +58,7 @@ public abstract class CxxReportSensor implements Sensor {
 
   protected ModuleFileSystem fs;
   protected Settings conf;
+  protected final ProjectReactor reactor;
 
   /**
    * Use this constructor if you dont have to save violations aka issues
@@ -64,8 +66,8 @@ public abstract class CxxReportSensor implements Sensor {
    * @param conf the Settings object used to access the configuration properties
    * @param fs   file system access layer
    */
-  protected CxxReportSensor(Settings conf, ModuleFileSystem fs) {
-    this(null, conf, fs, null);
+  protected CxxReportSensor(Settings conf, ModuleFileSystem fs, ProjectReactor reactor) {
+    this(null, conf, fs, reactor, null);
   }
 
   /**
@@ -77,11 +79,12 @@ public abstract class CxxReportSensor implements Sensor {
    * @param metric       this metrics will be used to save a measure of the overall
    *                     issue count. Pass 'null' to skip this.
    */
-  protected CxxReportSensor(ResourcePerspectives perspectives, Settings conf, ModuleFileSystem fs, Metric metric) {
+  protected CxxReportSensor(ResourcePerspectives perspectives, Settings conf, ModuleFileSystem fs, ProjectReactor reactor, Metric metric) {
     this.perspectives = perspectives;
     this.conf = conf;
     this.fs = fs;
     this.metric = metric;
+    this.reactor = reactor;
   }
 
   /**
@@ -95,8 +98,12 @@ public abstract class CxxReportSensor implements Sensor {
    * {@inheritDoc}
    */
   public void analyse(Project project, SensorContext context) {
+    if (CxxUtils.isReactorProject(project)) {
+      return; // dont analyse ... projects. TODO: rename the utils method
+    }
+
     try {
-      List<File> reports = getReports(conf, fs.baseDir().getPath(),
+      List<File> reports = getReports(conf, reactor.getRoot().getBaseDir().getCanonicalPath(),
           reportPathKey(), defaultReportPath());
 
       violationsCount = 0;
